@@ -33,7 +33,15 @@ public class Employee {
     private String country;
     private String bloodGroup;
     private String photo;
-
+    public String getFullName() {
+        if (middleName != null && !middleName.trim().isEmpty()) {
+            return firstName + " " + middleName + " " + lastName;
+        } else {
+            return firstName + " " + lastName;
+        }
+    }
+  
+    
     // Professional Information
     private String jobTitle;
 
@@ -64,6 +72,7 @@ public class Employee {
     private LocalDate probationEndDate;
     private String contractType;
     private LocalDate contractEndDate;
+    private String designation;
 
     // Emergency Contact Information
     private String emergencyContactName;
@@ -198,6 +207,9 @@ public class Employee {
     public void setLastUpdatedBy(String lastUpdatedBy) { this.lastUpdatedBy = lastUpdatedBy; }
     public LocalDateTime getLastUpdatedDate() { return lastUpdatedDate; }
     public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) { this.lastUpdatedDate = lastUpdatedDate; }
+    
+    public String getdesignation() { return designation; }
+    public void setdesignation(String designation) { this.designation = designation; }
 }
 
 

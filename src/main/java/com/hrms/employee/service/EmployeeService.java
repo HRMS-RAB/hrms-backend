@@ -1,3 +1,28 @@
+
+package com.hrms.employee.service;
+
+import com.hrms.employee.dto.EmployeeDTO;
+
+import java.util.List;
+
+public interface EmployeeService {
+
+    EmployeeDTO createEmployee(EmployeeDTO employeeDTO);
+
+    EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO);
+
+    EmployeeDTO getEmployeeById(Long employeeId);
+
+    List<EmployeeDTO> getAllEmployees();
+
+    void deleteEmployee(Long employeeId);
+}
+
+
+
+
+
+
 /*package com.hrms.employee.service;
 
 import com.hrms.employee.dto.EmployeeDTO;
@@ -177,22 +202,3 @@ public class EmployeeService {
 */
 
 //=================================================================
-
-package com.hrms.employee.service;
-
-import com.hrms.employee.dto.EmployeeDTO;
-
-import java.util.List;
-
-public interface EmployeeService {
-
-    EmployeeDTO createEmployee(EmployeeDTO employeeDTO);
-
-    EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO);
-
-    EmployeeDTO getEmployeeById(Long employeeId);
-
-    List<EmployeeDTO> getAllEmployees();
-
-    void deleteEmployee(Long employeeId);
-}
