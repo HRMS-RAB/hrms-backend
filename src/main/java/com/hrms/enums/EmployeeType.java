@@ -9,3 +9,4 @@ public enum EmployeeType {
     CONSULTANT,
     FREELANCER
 }
+

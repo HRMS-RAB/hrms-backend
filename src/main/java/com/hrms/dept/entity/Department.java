@@ -2,11 +2,13 @@ package com.hrms.dept.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import org.hibernate.envers.Audited;
+
 
 // Example of Lombok if you added the Lombok dependency
 
 //import lombok.NoArgsConstructor;
-
+@Audited
 @Entity
 @Table(name = "departments")
 public class Department {
