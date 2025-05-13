@@ -4,6 +4,8 @@ package com.hrms.employee.service;
 import com.hrms.employee.dto.EmployeeDTO;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface EmployeeService {
 
     /* ─── C R U D ───────────────────────────────────────── */
@@ -22,9 +24,15 @@ public interface EmployeeService {
 
     //** update selected fields */
     EmployeeDTO updateEmployee(Long id, EmployeeDTO dto);
-
-    //** delete hard */
+     //** delete hard */
     void deleteEmployee(Long id);
+    
+
+    /** 
+     * Stores the given file for employee `id` on disk
+     * and updates the Employee's photoPath, returning the updated DTO 
+     */
+    EmployeeDTO uploadPhoto(Long id, MultipartFile file);
 }
 
 

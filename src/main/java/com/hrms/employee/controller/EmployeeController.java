@@ -5,6 +5,7 @@ import com.hrms.employee.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,4 +63,13 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok("Employee with ID " + id + " deleted successfully.");
     }
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<EmployeeDTO> uploadPhoto(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+        EmployeeDTO dto = employeeService.uploadPhoto(id, file);
+        return ResponseEntity.ok(dto);
+    }
+
+    
 }
