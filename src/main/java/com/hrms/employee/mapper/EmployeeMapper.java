@@ -4,76 +4,52 @@ import com.hrms.dept.entity.Department;
 import com.hrms.dept.repository.DepartmentRepository;
 import com.hrms.employee.dto.EmployeeDTO;
 import com.hrms.employee.entity.Employee;
+import jakarta.persistence.EntityNotFoundException;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = EmployeeMapper.Helper.class)
-public interface EmployeeMapper {
+/**
+ * MapStruct mapper between EmployeeDTO and Employee.
+ * Includes a partialUpdate method so the service can patch only changed fields.
+ */
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public abstract class EmployeeMapper {
 
-  //  @Mapping(source = "departmentId", target = "department", qualifiedByName = "idToDepartment")
-	@Mappings({
-		  @Mapping(source = "personalEmail",    target = "personalEmail"),
-		  @Mapping(source = "workEmail",        target = "workEmail"),
-		  @Mapping(source = "employeeType",     target = "employeeType"),
-		  @Mapping(source = "employmentStatus", target = "employmentStatus"),
-		  @Mapping(source = "contractType",     target = "contractType"),
-		  @Mapping(source = "departmentId",     target = "department", qualifiedByName = "idToDepartment")
-		})
-    
-    
-    Employee toEntity(EmployeeDTO dto);
-
-    @Mapping(source = "department.departmentId",   target = "departmentId")
-    @Mapping(source = "department.departmentName", target = "departmentName")
-    EmployeeDTO toDTO(Employee entity);
-
-    @Component
-    class Helper {
-        @Autowired
-        private DepartmentRepository repo;
-
-        @Named("idToDepartment")
-        public Department idToDepartment(Long id) {
-            return (id == null ? null : repo.getReferenceById(id));
-        }
-    }
-}
-
-//++++++++++++++++++++++
-/*package com.hrms.employee.mapper;
-
-import com.hrms.employee.dto.EmployeeDTO;
-import com.hrms.employee.entity.Employee;
-import com.hrms.dept.entity.Department;
-import com.hrms.dept.repository.DepartmentRepository;
-import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;   // ← add
-
-@Mapper(componentModel = "spring", uses = EmployeeMapper.Helper.class)
-public interface EmployeeMapper {
-
+    /*──────────── DTO ➜ Entity (create) ────────────*/
     @Mapping(target = "department",
              source = "departmentId",
              qualifiedByName = "idToDepartment")
-    Employee toEntity(EmployeeDTO dto);
+    public abstract Employee toEntity(EmployeeDTO dto);
 
+    /*──────────── Entity ➜ DTO (response) ───────────*/
     @Mapping(target = "departmentId",   source = "department.departmentId")
     @Mapping(target = "departmentName", source = "department.departmentName")
-    EmployeeDTO toDTO(Employee entity);
+    public abstract EmployeeDTO toDTO(Employee entity);
 
-    //* Helper must be a Spring bean *
-    @Component                     // ← add this annotation
-    class Helper {
+    /*──────────── Patch existing entity ────────────*/
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public abstract void partialUpdate(@MappingTarget Employee entity, EmployeeDTO dto);
 
-        @Autowired
-        private DepartmentRepository repo;
+    /*──────────── Helpers ────────────*/
 
-        @Named("idToDepartment")
-        public Department idToDepartment(Long id) {
-            return id == null ? null : repo.getReferenceById(id);
+    @Autowired
+    private DepartmentRepository deptRepo;
+
+    @Named("idToDepartment")
+    protected Department mapDept(Long id) {
+        return id == null ? null : deptRepo.getReferenceById(id);
+    }
+
+    /** After MapStruct copies scalar fields, attach Department if provided. */
+    @AfterMapping
+    protected void handleDepartment(EmployeeDTO dto, @MappingTarget Employee entity) {
+        if (dto.getDepartmentId() != null) {
+            entity.setDepartment(
+                deptRepo.findById(dto.getDepartmentId())
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "Department not found: " + dto.getDepartmentId()))
+            );
         }
     }
 }
-*/
