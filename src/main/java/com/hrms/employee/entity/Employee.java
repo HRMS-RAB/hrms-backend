@@ -51,7 +51,19 @@ public class Employee {
     private String postalCode;
     private String country;
     private String bloodGroup;
-    private String photo;
+    public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
+
+	//private String photo;
+    /** path or filename of the stored photo */
+    @Column(name = "photo_path", length = 255)
+    private String photoPath;
+
 
     public String getFullName() {
         if (middleName != null && !middleName.isBlank()) {
@@ -290,13 +302,13 @@ public class Employee {
 		this.bloodGroup = bloodGroup;
 	}
 
-	public String getPhoto() {
+	/*public String getPhoto() {
 		return photo;
 	}
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
-	}
+	}*/
 
 	public String getJobTitle() {
 		return jobTitle;
